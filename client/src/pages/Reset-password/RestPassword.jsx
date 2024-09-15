@@ -10,10 +10,14 @@ const ResetPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
+  const [loading, setLoading] = useState(false); 
+  const [resetLoading, setResetLoading] = useState(false); 
   const navigate = useNavigate();
-  // Handle sending OTP
+
+  
   const handleSendOtp = async (e) => {
     e.preventDefault();
+    setLoading(true); 
     try {
       const response = await fetch("https://trailer-time-server-api.onrender.com/sendotp", {
         method: "POST",
@@ -31,11 +35,12 @@ const ResetPassword = () => {
     } catch (error) {
       toast.error("An error occurred. Try again.");
     }
+    setLoading(false); 
   };
 
-  // Handle password reset
   const handleResetPassword = async (e) => {
     e.preventDefault();
+    setResetLoading(true); 
     try {
       const response = await fetch("https://trailer-time-server-api.onrender.com/reset-password", {
         method: "POST",
@@ -61,6 +66,7 @@ const ResetPassword = () => {
     } catch (error) {
       toast.error("An error occurred. Try again.");
     }
+    setResetLoading(false);
   };
 
   return (
@@ -90,8 +96,9 @@ const ResetPassword = () => {
             <button
               type="submit"
               className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+              disabled={loading}
             >
-              Send OTP
+              {loading ? "Sending OTP..." : "Send OTP"}
             </button>
           </form>
         ) : (
@@ -111,7 +118,10 @@ const ResetPassword = () => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="newPassword" className="block font-bold mb-2 text-white ">
+              <label
+                htmlFor="newPassword"
+                className="block font-bold mb-2 text-white "
+              >
                 New Password
               </label>
               <div className="relative">
@@ -133,7 +143,10 @@ const ResetPassword = () => {
               </div>
             </div>
             <div className="mb-4">
-              <label htmlFor="confirmPassword" className="block font-bold mb-2 text-white">
+              <label
+                htmlFor="confirmPassword"
+                className="block font-bold mb-2 text-white"
+              >
                 Confirm Password
               </label>
               <input
@@ -145,13 +158,13 @@ const ResetPassword = () => {
                 className="w-full px-4 py-2 border rounded-md"
                 required
               />
-              
             </div>
             <button
               type="submit"
               className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+              disabled={resetLoading}
             >
-              Reset Password
+              {resetLoading ? "Resetting..." : "Reset Password"}
             </button>
           </form>
         )}
@@ -161,3 +174,4 @@ const ResetPassword = () => {
 };
 
 export default ResetPassword;
+
