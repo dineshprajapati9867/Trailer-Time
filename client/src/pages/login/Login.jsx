@@ -20,7 +20,7 @@ const Login = () => {
     setLoading(true); 
 
     try {
-      const response = await fetch("https://movix-server.netlify.app/login", {
+      const response = await fetch("https://trailer-time-server-ex05kc885.vercel.app/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
