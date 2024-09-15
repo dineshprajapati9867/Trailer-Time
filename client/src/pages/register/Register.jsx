@@ -6,15 +6,19 @@ import "react-toastify/dist/ReactToastify.css";
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false); 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (localStorage.getItem("isRegisterIn")) {
       navigate("/");
     }
-  }, []);
+  }, [navigate]);
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); 
 
     try {
       const response = await fetch("https://trailer-time-server-api.onrender.com/register", {
@@ -26,6 +30,7 @@ const Register = () => {
       });
 
       const data = await response.json();
+      setLoading(false); 
 
       if (response.ok) {
         toast.success("Registration successful!");
@@ -39,6 +44,7 @@ const Register = () => {
         toast.error(data.message || "Registration failed");
       }
     } catch (error) {
+      setLoading(false);
       toast.error("An error occurred. Please try again later.");
     }
   };
@@ -61,6 +67,7 @@ const Register = () => {
               placeholder="Enter your email"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
+              disabled={loading} 
             />
           </div>
           <div className="mb-4">
@@ -78,19 +85,24 @@ const Register = () => {
               placeholder="Enter your password"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
+              disabled={loading} 
             />
           </div>
+
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200"
+            className={`w-full ${
+              loading ? "bg-gray-400" : "bg-blue-500"
+            } text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200`}
+            disabled={loading} 
           >
-            Register
+            {loading ? "Registering..." : "Register"} 
           </button>
         </form>
         <p className="mt-4 text-gray-600 text-sm">
           Already have an account?{" "}
           <span
-            className="text-blue-500 hover:underline"
+            className="text-blue-500 hover:underline cursor-pointer"
             onClick={() => navigate("/login")}
           >
             Login here
