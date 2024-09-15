@@ -15,7 +15,7 @@ const ResetPassword = () => {
   const handleSendOtp = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/sendotp", {
+      const response = await fetch("https://trailer-time-server-api.onrender.com/sendotp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +37,7 @@ const ResetPassword = () => {
   const handleResetPassword = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/reset-password", {
+      const response = await fetch("https://trailer-time-server-api.onrender.com/reset-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
