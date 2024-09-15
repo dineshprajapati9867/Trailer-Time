@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { Link } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  // Check if user is already logged in
   useEffect(() => {
     if (localStorage.getItem("isLoggedIn")) {
       navigate("/");
@@ -30,7 +29,6 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Save login status to localStorage
         localStorage.setItem("isLoggedIn", "true");
         toast.success("Login successful!");
         setTimeout(() => {
@@ -90,12 +88,24 @@ const Login = () => {
         </form>
         <p className="mt-4 text-gray-600 text-sm">
           Don't have an account?{" "}
-          <span className="text-blue-500 hover:underline"
-          onClick={()=>{
-             navigate("/register")
-          }}>
-            Register here
-          </span>
+          <div className="flex  justify-between">
+            <span
+              className="text-blue-500 hover:underline"
+              onClick={() => {
+                navigate("/register");
+              }}
+            >
+              Register here
+            </span>
+            <span
+              className="text-blue-500 hover:underline"
+              onClick={() => {
+                navigate("/reset-password");
+              }}
+            >
+              Reset Password
+            </span>
+          </div>
         </p>
       </div>
     </div>

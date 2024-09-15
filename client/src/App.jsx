@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"; 
+import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { fetchDataFromApi } from "./utils/api";
 import { useSelector, useDispatch } from "react-redux";
@@ -12,71 +12,75 @@ import Explore from "./pages/explore/Explore";
 import PageNotFound from "./pages/404/PageNotFound";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
+import RestPassword from "./pages/Reset-password/RestPassword.jsx";
 
 function App() {
-   const dispatch = useDispatch();
-   const { url } = useSelector((state) => state.home);
+  const dispatch = useDispatch();
+  const { url } = useSelector((state) => state.home);
 
-   useEffect(() => {
-      fetchApiConfig();
-      genresCall();
-   }, []);
+  useEffect(() => {
+    fetchApiConfig();
+    genresCall();
+  }, []);
 
-   const fetchApiConfig = () => {
-      fetchDataFromApi("/configuration")
-         .then((res) => {
-            const url = {
-               backdrop: res.images.secure_base_url + "original",
-               poster: res.images.secure_base_url + "original",
-               profile: res.images.secure_base_url + "original",
-            };
+  const fetchApiConfig = () => {
+    fetchDataFromApi("/configuration").then((res) => {
+      const url = {
+        backdrop: res.images.secure_base_url + "original",
+        poster: res.images.secure_base_url + "original",
+        profile: res.images.secure_base_url + "original",
+      };
 
-            dispatch(getApiConfiguration(url));
-         });
-   };
+      dispatch(getApiConfiguration(url));
+    });
+  };
 
-   const genresCall = async () => {
-      let promises = [];
-      let endPoints = ["tv", "movie"];
-      let allGenres = {};
+  const genresCall = async () => {
+    let promises = [];
+    let endPoints = ["tv", "movie"];
+    let allGenres = {};
 
-      endPoints.forEach((url) => {
-         promises.push(fetchDataFromApi(`/genre/${url}/list`));
-      });
-      const data = await Promise.all(promises);
-      data.map(({ genres }) => {
-         return genres.map((item) => (allGenres[item.id] = item));
-      });
-      dispatch(getGenres(allGenres));
-   };
+    endPoints.forEach((url) => {
+      promises.push(fetchDataFromApi(`/genre/${url}/list`));
+    });
+    const data = await Promise.all(promises);
+    data.map(({ genres }) => {
+      return genres.map((item) => (allGenres[item.id] = item));
+    });
+    dispatch(getGenres(allGenres));
+  };
 
-   return (
-      <BrowserRouter>
-         <InnerApp />
-      </BrowserRouter>
-   );
+  return (
+    <BrowserRouter>
+      <InnerApp />
+    </BrowserRouter>
+  );
 }
 
 function InnerApp() {
-   const location = useLocation();
-      
-   const hideHeaderFooter = location.pathname === "/login" || location.pathname === "/register";
+  const location = useLocation();
 
-   return (
-      <>
-         {!hideHeaderFooter && <Header />}
-         <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/:mediaType/:id" element={<Details />} />
-            <Route path="/search/:query" element={<SearchResult />} />
-            <Route path="/explore/:mediaType" element={<Explore />} />
-            <Route path="/*" element={<PageNotFound />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-         </Routes>
-         {!hideHeaderFooter && <Footer />}
-      </>
-   );
+  const hideHeaderFooter =
+    location.pathname === "/login" ||
+    location.pathname === "/register" ||
+    location.pathname === "/reset-password";
+
+  return (
+    <>
+      {!hideHeaderFooter && <Header />}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/:mediaType/:id" element={<Details />} />
+        <Route path="/search/:query" element={<SearchResult />} />
+        <Route path="/explore/:mediaType" element={<Explore />} />
+        <Route path="/*" element={<PageNotFound />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/reset-password" element={<RestPassword />} />
+      </Routes>
+      {!hideHeaderFooter && <Footer />}
+    </>
+  );
 }
 
 export default App;
