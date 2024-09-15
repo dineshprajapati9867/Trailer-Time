@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link } from "react-router-dom";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,6 +17,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); 
 
     try {
       const response = await fetch("https://trailer-time-server-api.onrender.com/login", {
@@ -27,18 +29,21 @@ const Login = () => {
       });
 
       const data = await response.json();
-
+      
       if (response.ok) {
         localStorage.setItem("isLoggedIn", "true");
         toast.success("Login successful!");
         setTimeout(() => {
+          setLoading(false); 
           navigate("/");
         }, 1000);
       } else {
         toast.error(data.message || "Login failed");
+        setLoading(false); 
       }
     } catch (error) {
       toast.error("An error occurred. Please try again later.");
+      setLoading(false); 
     }
   };
 
@@ -82,8 +87,9 @@ const Login = () => {
           <button
             type="submit"
             className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200"
+            disabled={loading} 
           >
-            Login
+            {loading ? "Logging..." : "Login"}
           </button>
         </form>
         <p className="mt-4 text-gray-600 text-sm">
