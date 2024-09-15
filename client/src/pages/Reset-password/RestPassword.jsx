@@ -19,7 +19,7 @@ const ResetPassword = () => {
     e.preventDefault();
     setLoading(true); 
     try {
-      const response = await fetch("https://movix-server.netlify.app/sendotp", {
+      const response = await fetch("https://trailer-time-server-ex05kc885.vercel.app/sendotp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +42,7 @@ const ResetPassword = () => {
     e.preventDefault();
     setResetLoading(true); 
     try {
-      const response = await fetch("https://movix-server.netlify.app/reset-password", {
+      const response = await fetch("https://trailer-time-server-ex05kc885.vercel.app/reset-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
