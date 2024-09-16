@@ -91,6 +91,7 @@ const ResetPassword = () => {
                 placeholder="Enter your email"
                 className="w-full px-4 py-2 border rounded-md"
                 required
+                autocomplete="off"
               />
             </div>
             <button
@@ -115,6 +116,7 @@ const ResetPassword = () => {
                 placeholder="Enter OTP"
                 className="w-full px-4 py-2 border rounded-md"
                 required
+                autocomplete="off"
               />
             </div>
             <div className="mb-4">
@@ -133,6 +135,7 @@ const ResetPassword = () => {
                   placeholder="Enter new password"
                   className="w-full px-4 py-2 border rounded-md"
                   required
+                  autocomplete="off"
                 />
                 <span
                   className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
@@ -157,6 +160,7 @@ const ResetPassword = () => {
                 placeholder="Confirm new password"
                 className="w-full px-4 py-2 border rounded-md"
                 required
+                autocomplete="off"
               />
             </div>
             <button
