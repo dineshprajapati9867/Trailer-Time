@@ -65,6 +65,7 @@ const Login = () => {
               placeholder="Enter your email"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
+              autocomplete="off"
             />
           </div>
           <div className="mb-4">
@@ -82,6 +83,7 @@ const Login = () => {
               placeholder="Enter your password"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
+              autocomplete="off"
             />
           </div>
           <button
