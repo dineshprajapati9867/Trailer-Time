@@ -21,7 +21,7 @@ const Register = () => {
     setLoading(true); 
 
     try {
-      const response = await fetch("https://trailer-time-server.vercel.app/register", {
+      const response = await fetch("https://trailer-time-server-api.onrender.com/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
