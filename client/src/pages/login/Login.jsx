@@ -20,7 +20,7 @@ const Login = () => {
     setLoading(true); 
 
     try {
-      const response = await fetch("https://trailer-time-server.vercel.app/login", {
+      const response = await fetch("https://trailer-time-server-api.onrender.com/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
