@@ -16,38 +16,45 @@ const Register = () => {
   }, [navigate]);
 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true); 
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      const response = await fetch("https://trailer-time-server.onrender.com/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+  if (password.length < 8) {
+    setLoading(false);
+    toast.error("Password must be at least 8 characters long.");
+    return;
+  }
 
-      const data = await response.json();
-      setLoading(false); 
+  try {
+    const response = await fetch("https://trailer-time-server-api.onrender.com/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
-      if (response.ok) {
-        toast.success("Registration successful!");
-        localStorage.setItem("isRegisterIn", "true");
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
-        setEmail("");
-        setPassword("");
-      } else {
-        toast.error(data.message || "Registration failed");
-      }
-    } catch (error) {
-      setLoading(false);
-      toast.error("An error occurred. Please try again later.");
+    const data = await response.json();
+    setLoading(false);
+
+    if (response.ok) {
+      toast.success("Registration successful!");
+      localStorage.setItem("isRegisterIn", "true");
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+      setEmail("");
+      setPassword("");
+    } else {
+      toast.error(data.message || "Registration failed");
     }
-  };
+  } catch (error) {
+    setLoading(false);
+    toast.error("An error occurred. Please try again later.");
+  }
+};
+
 
   return (
     <div className="flex items-center justify-center min-h-screen">
