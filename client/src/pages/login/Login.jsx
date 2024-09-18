@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,10 +17,10 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); 
+    setLoading(true);
 
     try {
-      const response = await fetch("https://trailer-time-server.onrender.com/login", {
+      const response = await fetch("https://trailer-time-server-api.onrender.com/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,21 +29,21 @@ const Login = () => {
       });
 
       const data = await response.json();
-      
+
       if (response.ok) {
         localStorage.setItem("isLoggedIn", "true");
         toast.success("Login successful!");
         setTimeout(() => {
-          setLoading(false); 
+          setLoading(false);
           navigate("/");
         }, 1000);
       } else {
         toast.error(data.message || "Login failed");
-        setLoading(false); 
+        setLoading(false);
       }
     } catch (error) {
       toast.error("An error occurred. Please try again later.");
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -65,14 +65,11 @@ const Login = () => {
               placeholder="Enter your email"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
-              autocomplete="off"
+              autoComplete="off"
             />
           </div>
           <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-white font-bold mb-2"
-            >
+            <label htmlFor="password" className="block text-white font-bold mb-2">
               Password
             </label>
             <input
@@ -83,38 +80,34 @@ const Login = () => {
               placeholder="Enter your password"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
-              autocomplete="off"
+              autoComplete="off"
             />
           </div>
           <button
             type="submit"
             className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200"
-            disabled={loading} 
+            disabled={loading}
           >
             {loading ? "Logging..." : "Login"}
           </button>
         </form>
-        <p className="mt-4 text-gray-600 text-sm">
+        <div className="mt-4 text-gray-600 text-sm">
           Don't have an account?{" "}
-          <div className="flex  justify-between">
+          <div className="flex justify-between">
             <span
               className="text-blue-500 hover:underline"
-              onClick={() => {
-                navigate("/register");
-              }}
+              onClick={() => navigate("/register")}
             >
               Register here
             </span>
             <span
               className="text-blue-500 hover:underline"
-              onClick={() => {
-                navigate("/reset-password");
-              }}
+              onClick={() => navigate("/reset-password")}
             >
               Reset Password
             </span>
           </div>
-        </p>
+        </div>
       </div>
     </div>
   );
