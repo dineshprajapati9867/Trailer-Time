@@ -10,16 +10,15 @@ const ResetPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
-  const [loading, setLoading] = useState(false); 
-  const [resetLoading, setResetLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
   const navigate = useNavigate();
 
-  
   const handleSendOtp = async (e) => {
     e.preventDefault();
-    setLoading(true); 
+    setLoading(true);
     try {
-      const response = await fetch("https://trailer-time-server.onrender.com/sendotp", {
+      const response = await fetch("https://trailer-time-server-api.onrender.com/sendotp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,14 +34,14 @@ const ResetPassword = () => {
     } catch (error) {
       toast.error("An error occurred. Try again.");
     }
-    setLoading(false); 
+    setLoading(false);
   };
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
-    setResetLoading(true); 
+    setResetLoading(true);
     try {
-      const response = await fetch("https://trailer-time-server.onrender.com/reset-password", {
+      const response = await fetch("https://trailer-time-server-api.onrender.com/reset-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -91,7 +90,7 @@ const ResetPassword = () => {
                 placeholder="Enter your email"
                 className="w-full px-4 py-2 border rounded-md"
                 required
-                autocomplete="off"
+                autoComplete="off"
               />
             </div>
             <button
@@ -116,7 +115,7 @@ const ResetPassword = () => {
                 placeholder="Enter OTP"
                 className="w-full px-4 py-2 border rounded-md"
                 required
-                autocomplete="off"
+                autoComplete="off"
               />
             </div>
             <div className="mb-4">
@@ -135,7 +134,7 @@ const ResetPassword = () => {
                   placeholder="Enter new password"
                   className="w-full px-4 py-2 border rounded-md"
                   required
-                  autocomplete="off"
+                  autoComplete="off"
                 />
                 <span
                   className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
@@ -160,7 +159,7 @@ const ResetPassword = () => {
                 placeholder="Confirm new password"
                 className="w-full px-4 py-2 border rounded-md"
                 required
-                autocomplete="off"
+                autoComplete="off"
               />
             </div>
             <button
@@ -178,4 +177,3 @@ const ResetPassword = () => {
 };
 
 export default ResetPassword;
-
