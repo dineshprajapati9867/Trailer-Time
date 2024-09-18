@@ -1,125 +1,179 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Register = () => {
+const ResetPassword = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false); 
+  const [otp, setOtp] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (localStorage.getItem("isRegisterIn")) {
-      navigate("/");
+  const handleSendOtp = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await fetch("https://trailer-time-server-api.onrender.com/sendotp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+      if (response.ok) {
+        toast.success("OTP sent to your email");
+        setOtpSent(true);
+      } else {
+        toast.error("Failed to send OTP");
+      }
+    } catch (error) {
+      toast.error("An error occurred. Try again.");
     }
-  }, [navigate]);
-
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-
-  if (password.length < 8) {
     setLoading(false);
-    toast.error("Password must be at least 8 characters long.");
-    return;
-  }
+  };
 
-  try {
-    const response = await fetch("https://trailer-time-server-api.onrender.com/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const data = await response.json();
-    setLoading(false);
-
-    if (response.ok) {
-      toast.success("Registration successful!");
-      localStorage.setItem("isRegisterIn", "true");
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
-      setEmail("");
-      setPassword("");
-    } else {
-      toast.error(data.message || "Registration failed");
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    setResetLoading(true);
+    try {
+      const response = await fetch("https://trailer-time-server-api.onrender.com/reset-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          otp,
+          newPassword,
+          confirmPassword,
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        toast.success("Password reset successfully!");
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
+      } else {
+        toast.error(data.message || "Failed to reset password");
+      }
+    } catch (error) {
+      toast.error("An error occurred. Try again.");
     }
-  } catch (error) {
-    setLoading(false);
-    toast.error("An error occurred. Please try again later.");
-  }
-};
-
+    setResetLoading(false);
+  };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-screen  bg-[#04152D]">
       <ToastContainer />
-      <div className="p-8 rounded-lg w-full max-w-md shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px]">
-        <h2 className="text-2xl font-bold mb-6 text-white">Register</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-white font-bold mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-              disabled={loading} 
-              autocomplete="off"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-white font-bold mb-2"
+      <div className="p-8  rounded-md w-full max-w-md bg-[#04152D] shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px]">
+        <h2 className="text-2xl font-bold mb-6 text-white">Reset Password</h2>
+        {!otpSent ? (
+          <form onSubmit={handleSendOtp}>
+            <div className="mb-4">
+              <label
+                htmlFor="email"
+                className="block font-bold mb-2 text-white"
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="w-full px-4 py-2 border rounded-md"
+                required
+                autoComplete="off"
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+              disabled={loading}
             >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-              disabled={loading} 
-              autocomplete="off"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className={`w-full ${
-              loading ? "bg-gray-400" : "bg-blue-500"
-            } text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200`}
-            disabled={loading} 
-          >
-            {loading ? "Registering..." : "Register"} 
-          </button>
-        </form>
-        <p className="mt-4 text-gray-600 text-sm">
-          Already have an account?{" "}
-          <span
-            className="text-blue-500 hover:underline cursor-pointer"
-            onClick={() => navigate("/login")}
-          >
-            Login here
-          </span>
-        </p>
+              {loading ? "Sending OTP..." : "Send OTP"}
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handleResetPassword} className="">
+            <div className="mb-4">
+              <label htmlFor="otp" className="block font-bold mb-2 text-white">
+                OTP
+              </label>
+              <input
+                type="text"
+                id="otp"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                placeholder="Enter OTP"
+                className="w-full px-4 py-2 border rounded-md"
+                required
+                autoComplete="off"
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="newPassword"
+                className="block font-bold mb-2 text-white "
+              >
+                New Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="newPassword"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Enter new password"
+                  className="w-full px-4 py-2 border rounded-md"
+                  required
+                  autoComplete="off"
+                />
+                <span
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? "🙈" : "👁️"}
+                </span>
+              </div>
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="confirmPassword"
+                className="block font-bold mb-2 text-white"
+              >
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                id="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm new password"
+                className="w-full px-4 py-2 border rounded-md"
+                required
+                autoComplete="off"
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+              disabled={resetLoading}
+            >
+              {resetLoading ? "Resetting..." : "Reset Password"}
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );
 };
 
-export default Register;
+export default ResetPassword;
